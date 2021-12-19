@@ -21,6 +21,24 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    flavorDimensions "product", "server"
+    productFlavors {
+        bike {
+            dimension "product"
+            applicationIdSuffix ".bike"
+        }
+        car {
+            dimension "product"
+            applicationIdSuffix ".car"
+        }
+        client {
+            dimension "side"
+        }
+        admin {
+            dimension "admin"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
