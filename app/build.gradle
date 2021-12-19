@@ -26,16 +26,21 @@ android {
         bike {
             dimension "product"
             applicationIdSuffix ".bike"
+            manifestPlaceholders.appName = "Bike"
         }
         car {
             dimension "product"
             applicationIdSuffix ".car"
+            manifestPlaceholders.appName = "Car"
         }
         client {
             dimension "side"
+            manifestPlaceholders.appNameSuffix = ""
         }
         admin {
             dimension "side"
+            applicationIdSuffix ".admin"
+            manifestPlaceholders.appNameSuffix = ".Admin"
         }
     }
 
