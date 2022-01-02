@@ -4,5 +4,5 @@ import br.com.douglasmotta.whitelabeltutorial.domain.model.Product
 
 interface CreateProductUseCase {
 
-    suspend operator fun invoke(description: String, imageUri: Uri) : Product
+    suspend operator fun invoke(description: String,price: Double, imageUri: Uri) : Product
 }
