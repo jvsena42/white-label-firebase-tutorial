@@ -1,18 +1,29 @@
 package br.com.douglasmotta.whitelabeltutorial.ui.products.addProduct
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import br.com.douglasmotta.whitelabeltutorial.R
 import br.com.douglasmotta.whitelabeltutorial.databinding.AddProductFragmentBinding
+import br.com.douglasmotta.whitelabeltutorial.util.CurrencyTextWatcher
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class AddProductFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: AddProductFragmentBinding
     private lateinit var viewModel: AddProductViewModel
+
+    private var imaUri: Uri? = null
+
+    private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        imaUri = uri
+        binding.imageProduct.setImageURI(uri)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,6 +35,28 @@ class AddProductFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = AddProductFragmentBinding.bind(view)
+        setListeners()
+    }
+
+    private fun setListeners() = binding.run {
+        imageProduct.setOnClickListener {
+            chooseImage()
+        }
+
+        buttonAddProduct.setOnClickListener {
+            val description = inputDescription.text.toString()
+            val price = inputPrice.text.toString()
+
+
+        }
+
+        inputPrice.run {
+            addTextChangedListener(CurrencyTextWatcher(this))
+        }
+    }
+
+    private fun chooseImage() {
+        getContent.launch("image/*")
     }
 
 }
