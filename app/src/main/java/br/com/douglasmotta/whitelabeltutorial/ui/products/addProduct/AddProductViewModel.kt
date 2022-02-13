@@ -26,14 +26,16 @@ class AddProductViewModel(
 
     private var isFormValid = false
 
-    fun createProduct(description: String, price: String, imageUri: Uri) = viewModelScope.launch {
+    fun createProduct(description: String, price: String, imageUri: Uri?) = viewModelScope.launch {
         isFormValid = true
 
-
+        _imageUriErrorResId.value = getDrawableResIdIfNull(imageUri)
+        _descriptionFieldErrorResId.value = getErrorStringResIdIfEmpty(description)
+        _priceFieldErrorResId.value = getErrorStringResIdIfEmpty(price)
 
         if (isFormValid) {
             try {
-                val product = createProductUseCase(description, price.fromCurrency(), imageUri)
+                val product = createProductUseCase(description, price.fromCurrency(), imageUri!!)
             } catch (e: Exception) {
                 Log.d("CreateProduct", e.toString())
             }
