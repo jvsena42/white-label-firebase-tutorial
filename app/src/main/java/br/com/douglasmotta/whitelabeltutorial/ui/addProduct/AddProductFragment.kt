@@ -1,4 +1,4 @@
-package br.com.douglasmotta.whitelabeltutorial.ui.products.addProduct
+package br.com.douglasmotta.whitelabeltutorial.ui.addProduct
 
 import android.net.Uri
 import android.os.Bundle
@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import br.com.douglasmotta.whitelabeltutorial.R
 import br.com.douglasmotta.whitelabeltutorial.databinding.AddProductFragmentBinding
