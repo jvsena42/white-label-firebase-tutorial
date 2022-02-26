@@ -31,6 +31,7 @@ class ProductsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
+        observe()
 
         viewModel.getProducts()
     }
@@ -39,6 +40,12 @@ class ProductsFragment : Fragment() {
         binding.recyclerProducts.apply {
             setHasFixedSize(true)
             adapter = productsAdapter
+        }
+    }
+
+    private fun observe() {
+        viewModel.productsData.observe(viewLifecycleOwner) { products ->
+            productsAdapter.submitList(products)
         }
     }
 
