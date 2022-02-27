@@ -2,6 +2,7 @@ package br.com.douglasmotta.whitelabeltutorial.ui.products
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,43 +11,51 @@ import br.com.douglasmotta.whitelabeltutorial.domain.model.Product
 import br.com.douglasmotta.whitelabeltutorial.util.toCurrency
 import com.bumptech.glide.Glide
 
-class ProductsAdapter: ListAdapter<Product, ProductsAdapter.ProductsViewHolder>(DIFF_CALLBACK) {
+class ProductsAdapter: RecyclerView.Adapter<ProductsAdapter.ProductsViewHolder>()  {
+
+    private val callback = object : DiffUtil.ItemCallback<Product>(){
+
+        override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    val differ = AsyncListDiffer(this,callback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductsViewHolder {
-        return ProductsViewHolder.create(parent)
+        val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        return ProductsViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ProductsViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val post = differ.currentList[position]
+        holder.bind( post)
     }
 
-    class ProductsViewHolder(
-        private val itemBinding: ItemProductBinding
-    ) : RecyclerView.ViewHolder(itemBinding.root) {
+    override fun getItemCount() = differ.currentList.size
 
-        fun bind(product: Product) = itemBinding.run {
-            Glide.with(itemView).load(product.imageUrl).centerCrop().into(imageProduct)
-            textDescription.text = product.description
-            textPrice.text = product.price.toCurrency()
-        }
+    inner class ProductsViewHolder(private val binding:ItemProductBinding): RecyclerView.ViewHolder(binding.root){
+        fun bind(item: Product) = binding.run{
 
-        companion object {
-            fun create(parent: ViewGroup): ProductsViewHolder {
-                val itemBinding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                return  ProductsViewHolder(itemBinding)
+            Glide.with(itemView).load(item.imageUrl).centerCrop().into(imageProduct)
+            textDescription.text = item.description
+            textPrice.text = item.price.toCurrency()
+
+            binding.root.setOnClickListener{
+                onItemClickListener?.let {
+                    it(item)
+                }
             }
         }
     }
 
-    companion object {
-        private val DIFF_CALLBACK = object  : DiffUtil.ItemCallback<Product>() {
-            override fun areItemsTheSame(oldItem: Product, newItem: Product): Boolean {
-                return oldItem.description == newItem.description
-            }
+    private var onItemClickListener:((Product)->Unit)? = null
 
-            override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
-                return oldItem == newItem
-            }
-        }
+    fun setOnItemClickListener(listener:(Product)->Unit){
+        onItemClickListener = listener
     }
 }

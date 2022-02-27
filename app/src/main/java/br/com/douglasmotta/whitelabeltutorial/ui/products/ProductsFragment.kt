@@ -10,6 +10,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleObserver
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.douglasmotta.whitelabeltutorial.R
 import br.com.douglasmotta.whitelabeltutorial.databinding.FragmentProductsBinding
 import br.com.douglasmotta.whitelabeltutorial.domain.model.Product
@@ -24,7 +26,7 @@ class ProductsFragment : Fragment() {
 
     private val viewModel: ProductsViewModel by viewModels()
 
-    private val productsAdapter = ProductsAdapter()
+    private lateinit var productsAdapter: ProductsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,8 +49,13 @@ class ProductsFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.recyclerProducts.apply {
-            setHasFixedSize(true)
+            productsAdapter = ProductsAdapter()
             adapter = productsAdapter
+            setHasFixedSize(true)
+            layoutManager = GridLayoutManager(requireContext(),2)
+        }
+        productsAdapter.setOnItemClickListener {
+
         }
     }
 
@@ -65,11 +72,11 @@ class ProductsFragment : Fragment() {
             val observer = LifecycleEventObserver { _, event ->
                 if (event == Lifecycle.Event.ON_RESUME && savedStateHandle.contains(PRODUCT_KEY)) {
                     val product = savedStateHandle.get<Product>(PRODUCT_KEY)
-                    val oldList = productsAdapter.currentList
+                    val oldList = productsAdapter.differ.currentList
                     val newList = oldList.toMutableList().apply {
                         add(product)
                     }
-                    productsAdapter.submitList(newList)
+                    productsAdapter.differ.submitList(newList)
                     binding.recyclerProducts.smoothScrollToPosition(newList.size -1)
                     savedStateHandle.remove<Product>(PRODUCT_KEY)
                 }
@@ -87,7 +94,7 @@ class ProductsFragment : Fragment() {
 
     private fun observe() {
         viewModel.productsData.observe(viewLifecycleOwner) { products ->
-            productsAdapter.submitList(products)
+            productsAdapter.differ.submitList(products)
         }
         viewModel.addButtonVisibility.observe(viewLifecycleOwner) { visibility ->
             binding.fabAdd.visibility = visibility
