@@ -63,7 +63,6 @@ class ProductsFragment : Fragment() {
         }
         swipeProducts.setOnRefreshListener {
             viewModel.getProducts()
-            swipeProducts.isRefreshing = false
         }
     }
 
@@ -97,6 +96,7 @@ class ProductsFragment : Fragment() {
     private fun observe() {
         viewModel.productsData.observe(viewLifecycleOwner) { products ->
             productsAdapter.differ.submitList(products)
+            binding.swipeProducts.isRefreshing = false
         }
         viewModel.addButtonVisibility.observe(viewLifecycleOwner) { visibility ->
             binding.fabAdd.visibility = visibility
