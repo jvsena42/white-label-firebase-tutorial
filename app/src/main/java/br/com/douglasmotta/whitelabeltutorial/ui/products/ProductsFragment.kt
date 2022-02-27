@@ -8,10 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleObserver
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.douglasmotta.whitelabeltutorial.R
 import br.com.douglasmotta.whitelabeltutorial.databinding.FragmentProductsBinding
 import br.com.douglasmotta.whitelabeltutorial.domain.model.Product
@@ -59,9 +57,13 @@ class ProductsFragment : Fragment() {
         }
     }
 
-    private fun initListeners() {
-        binding.fabAdd.setOnClickListener {
+    private fun initListeners() = binding.run {
+        fabAdd.setOnClickListener {
             findNavController().navigate(R.id.action_productsFragment_to_addProductFragment)
+        }
+        swipeProducts.setOnRefreshListener {
+            viewModel.getProducts()
+            swipeProducts.isRefreshing = false
         }
     }
 
