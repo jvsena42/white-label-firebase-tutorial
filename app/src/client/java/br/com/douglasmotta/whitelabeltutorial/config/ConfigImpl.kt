@@ -1,6 +1,8 @@
 package br.com.douglasmotta.whitelabeltutorial.config
 
-class ConfigImpl: Config {
+import javax.inject.Inject
+
+class ConfigImpl @Inject constructor(): Config {
     override val addButtonVisibility: Boolean
         get() = false
 }
