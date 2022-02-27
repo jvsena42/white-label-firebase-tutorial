@@ -21,8 +21,8 @@ class ProductsViewModel @Inject constructor(
     private val _productsData = MutableLiveData<List<Product>>()
     val productsData: LiveData<List<Product>> = _productsData
 
-/*    private val _addButtonVisibility = MutableLiveData<config.addButtonVisibility>()
-    val addButtonVisibility: LiveData<Int> = _addButtonVisibility*/
+    private val _addButtonVisibility = MutableLiveData(config.addButtonVisibility)
+    val addButtonVisibility: LiveData<Int> = _addButtonVisibility
 
     fun getProducts() = viewModelScope.launch {
         try {

@@ -47,6 +47,9 @@ class ProductsFragment : Fragment() {
         viewModel.productsData.observe(viewLifecycleOwner) { products ->
             productsAdapter.submitList(products)
         }
+        viewModel.addButtonVisibility.observe(viewLifecycleOwner) { visibility ->
+            binding.fabAdd.visibility = visibility
+        }
     }
 
     override fun onDestroyView() {
