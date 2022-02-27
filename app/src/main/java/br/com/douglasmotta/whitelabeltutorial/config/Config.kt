@@ -2,5 +2,5 @@ package br.com.douglasmotta.whitelabeltutorial.config
 
 interface Config {
 
-    val addButtonVisibility: Boolean
+    val addButtonVisibility: Int
 }
